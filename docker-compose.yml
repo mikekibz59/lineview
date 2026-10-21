@@ -1,8 +1,14 @@
 services:
   loader:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: cmd/loader/Dockerfile
     profiles: ["load"]
+    command: ["-workers", "4"]
+    volumes:
+      - ./loadtest:/out
     environment:
+      TOKENS_PATH: /out/tokens.json
       # Must be dev_user: the loader writes every tenant's rows, so it needs
       # to bypass RLS. The app role (lineview_app) would be blocked.
       DATABASE_URL: postgres://dev_user:dev_postgres@db:5432/lineview_db?sslmode=disable
