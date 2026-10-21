@@ -1,0 +1,5 @@
+-- -- The tenant for the current transaction. NULLIF matters; after a transaction that used
+-- -- set_config(..., true), a pooled connection reports '' (empty string), not NULL,
+-- -- and ''::uuid raises an error. NULLIF turns '' into NULL, so "no tenant set" -> zero rows.
+-- 
+-- CREATE 
