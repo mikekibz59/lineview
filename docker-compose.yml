@@ -60,5 +60,18 @@ services:
       retries: 5
       start_period: 30s
 
+  locust:
+    image: locustio/locust:2.32.0
+    profiles: ["load"]
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./locust:/mnt/locust:ro
+      - ./loadtest:/mnt/loadtest:ro
+    environment:
+      TOKENS_PATH: /mnt/loadtest/tokens.json
+    command: -f /mnt/locust/locustfile.py --host http://api:8080
+    depends_on:
+      - api
 volumes:
   postgres_data:
