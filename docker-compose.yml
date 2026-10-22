@@ -1,4 +1,24 @@
 services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: cmd/api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      APP_DATABASE_URL: postgres://lineview_app:dev_app@db:5432/lineview_db?sslmode=disable
+      AUTH_DATABASE_URL: postgres://lineview_auth:dev_auth@db:5432/lineview_db?sslmode=disable
+      TENANT_MODE: ${TENANT_MODE:-safe}
+      APP_MAX_CONNS: "10"
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512m
+
   loader:
     build:
       context: ./backend

@@ -7,6 +7,4 @@ RUN CGO_ENABLED=0 go build -o /out/api ./cmd/api
 
 FROM alpine:3
 COPY --from=build /out/api /usr/local/bin/api
-USER nobody
-EXPOSE 8080
-ENTRYPOINT ["api"]
+ENTRYPOINT ["/usr/local/bin/api"]
