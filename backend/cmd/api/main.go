@@ -37,10 +37,12 @@ func (s *Server) healthz(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "app db down", http.StatusServiceUnavailable)
 		return
 	}
+
 	if err := s.authPool.Ping(ctx); err != nil {
 		http.Error(w, "auth db down", http.StatusServiceUnavailable)
 		return
 	}
+
 	w.Write([]byte("ok"))
 }
 
