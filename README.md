@@ -13,7 +13,7 @@ machine.
 
 | Tenant | Users | Inspection Rows|
 |--------|-------|----------------|
-|Ironval Castings| 200|10,000, 000|
+|Ironvale Castings| 200|10,000, 000|
 | Brightline Plastics| 100 | 2,7000,000|
 |Kestrel Fasteners| 50 | 10,000|
 
@@ -243,7 +243,7 @@ The leak comes from teh unsafe mode's two separate trips to the connection pool:
 Locust settings (environment variables read by `locustfile.py`): `TENANTS`(comma-separated tenant names), `WAIT_MIN/WAIT_MAX`(think time in seconds), `WINDOW_DAYS`(query window), `TOKENS_PATH`
 
 ### 5. Noisy neighbour
-- A light tenant (Kestrel, 3 users) alone, then next to a heavy one (IronVal, 20 users). Safe mode. Compare only the `victim [Kestrel fasteners]` row.
+- A light tenant (Kestrel, 3 users) alone, then next to a heavy one (Ironvale, 20 users). Safe mode. Compare only the `victim [Kestrel fasteners]` row.
 ```sh
     TENANT_MODE=safe docker compose up -d --force-recreate api
     docker compose logs api | grep listening | tail -1

@@ -33,7 +33,7 @@ with open(TOKENS_PATH) as f:
     TOKENS = json.load(f)
 
 VICTIM = os.environ.get("VICTIM_TENANT", "Kestrel Fasteners")
-NEIGHBOUR = os.environ.get("NEIGHTBOUR_TENANT", "Ironvale Castings")
+NEIGHBOUR = os.environ.get("NEIGHBOUR_TENANT", "Ironvale Castings")
 VICTIM_USERS = int(os.environ.get("VICTIM_USERS", "3"))
 NEIGHBOUR_USERS = int(os.environ.get("NEIGHBOUR_USERS", "0"))
 VICTIM_WINDOW_DAYS = int(os.environ.get("VICTIM_WINDOW_DAYS", "1"))
