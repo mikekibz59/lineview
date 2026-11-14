@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lineview-api
+  labels:
+    app: lineview-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lineview-api
+  template:
+    metadata:
+      labels:
+        app: lineview-api
+    spec:
+      containers:
+        - name: api
+          image: lineview/api:v1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: APP_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: lineview-db-secret
+                  key: app_database_url
+            - name: AUTH_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: lineview-db-secret
+                  key: auth_database_url
+            - name: TENANT_MODE
+              value: "safe"
+            - name: APP_MAX_CONNS
+              value: "10"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: 128Mi
+            limits:
+              cpu: "500m"
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lineview-api-svc
+  labels:
+    app: lineview-api
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http
+  selector:
+    app: lineview-api
