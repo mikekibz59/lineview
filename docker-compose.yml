@@ -10,6 +10,7 @@ services:
       AUTH_DATABASE_URL: postgres://lineview_auth:dev_auth@db:5432/lineview_db?sslmode=disable
       TENANT_MODE: ${TENANT_MODE:-safe}
       APP_MAX_CONNS: "10"
+      IRONVALE_DATABASE_URL: postgres://lineview_app:dev_app@ironValeDb:5431/lineview_ironvale_db?sslmode=disable
     depends_on:
       db:
         condition: service_healthy
@@ -60,6 +61,30 @@ services:
       retries: 5
       start_period: 30s
 
+  ironValeDb:
+    image: postgres:18-alpine
+    container_name: ironvale_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_postgres
+      POSTGRES_DB: lineview_ironvale_db
+    ports:
+      - "5431:5432"
+    volumes:
+      # PG18 images keep data under /var/lib/postgresql/18/docker,
+      # so the volume mounts one level up.
+      - ironvale_data:/var/lib/postgresql
+      - ./db/ironValeInit:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # -h localhost forces TCP, so "ready" is not reported while the
+      # temporary init server (socket-only) is still running scripts.
+      test: ["CMD-SHELL", "pg_isready -h localhost -U dev_user -d lineview_ironvale_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
   locust:
     image: locustio/locust:2.32.0
     profiles: ["load"]
@@ -75,3 +100,4 @@ services:
       - api
 volumes:
   postgres_data:
+  ironvale_data:

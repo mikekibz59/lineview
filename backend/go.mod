@@ -4,6 +4,7 @@ go 1.26.4
 
 require (
 	github.com/brianvoe/gofakeit/v7 v7.18.0
+	github.com/georgysavva/scany/v2 v2.1.4
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgx/v5 v5.11.0
 	golang.org/x/sync v0.24.0
